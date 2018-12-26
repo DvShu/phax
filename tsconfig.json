@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./",
+    "strict": true,
+    "target": "ES6",
+    "pretty": true,
+    "declaration": true
+  },
+  "include": [
+    "lib/index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
