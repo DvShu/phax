@@ -122,3 +122,5 @@ post('/post').json();
 ## Language
 1. English
 2. [简体中文](https://github.com/DvShu/phax/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3 "简体中文")
+## License
+[MIT](https://github.com/DvShu/phax/blob/master/LICENSE "MIT")
