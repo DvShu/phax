@@ -13,6 +13,19 @@
     "index.d.ts",
     "dist/index.js"
   ],
+  "keywords": [
+    "javascript",
+    "http",
+    "fetch"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ReconcileMySelf/phax.git"
+  },
+  "homepage": "https://github.com/ReconcileMySelf/phax",
+  "bugs": {
+    "url": "https://github.com/ReconcileMySelf/phax/issues"
+  },
   "scripts": {
     "test": "karma start",
     "lint": "eslint --ext .js lib/index.ts",
