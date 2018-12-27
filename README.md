@@ -12,7 +12,7 @@ yarn add phax
 <script src="https://cdn.jsdelivr.net/npm/phax@0.0.2/dist/index.min.js"></script>
 ```
 ### Download:
-As an alternative to using npm, you can obtain `dist/index.js` from the Releases section. The UMD distribution is compatible with AMD and CommonJS module loaders, as well as loading directly into a page via `<script>` tag.
+As an alternative to using npm, you can obtain `dist/index.js` from the [Releases](https://github.com/DvShu/phax/releases "Releases") section. The UMD distribution is compatible with AMD and CommonJS module loaders, as well as loading directly into a page via `<script>` tag.
 ## Usage
 Temporarily only supports `GET/POST` method. The default value for `credentials` is "same-origin".
 ```javascript
