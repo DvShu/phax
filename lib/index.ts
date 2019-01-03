@@ -6,13 +6,18 @@ function _extend(target: any, source: any) {
   }
 }
 
-class Phax {
+class R {
 
   opts: any;
 
-  constructor(method: string, args: any[]) {
-    this.opts = { credentials: 'same-origin', method: method };
+  constructor(args: any[]) {
+    this.opts = { credentials: 'same-origin', method: 'GET' };
     this._args(args);
+  }
+
+  method(verb: string) {
+    this.opts.method = verb.toUpperCase();
+    return this;
   }
 
   _args(args: any[]) {
@@ -52,7 +57,7 @@ class Phax {
     return this._request('formData');
   }
 
-  _request(way = 'text') {
+  _request(way: string) {
     let url: string = this.opts.url;
     delete this.opts.url;
 
@@ -69,10 +74,14 @@ class Phax {
   }
 }
 
-export function get(...args: any[]) {
-  return new Phax('GET', args);
-}
 
-export function post(...args: any[]) {
-  return new Phax('POST', args);
-}
+let phax: any = (...args: any[]) => new R(args);
+
+phax.get = (...args: any[]) => new R(args).method('GET');
+phax.post = (...args: any[]) => new R(args).method('POST');
+phax.put = (...args: any[]) => new R(args).method('PUT');
+phax.patch = (...args: any[]) => new R(args).method('PATCH');
+phax.delete = (...args: any[]) => new R(args).method('DELETE');
+phax.head = (...args: any[]) => new R(args).method('HEAD');
+
+export default phax;

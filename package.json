@@ -1,6 +1,6 @@
 {
   "name": "phax",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Lightweight HTTP client based on the browser Fetch API",
   "main": "index.js",
   "types": "index.d.ts",
@@ -29,8 +29,7 @@
   "scripts": {
     "test": "karma start",
     "lint": "eslint --ext .js lib/index.ts",
-    "tsc": "tsc",
-    "build": "rollup --config rollup.config.js"
+    "build": "tsc && rollup --config rollup.config.js"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
