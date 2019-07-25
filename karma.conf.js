@@ -14,6 +14,7 @@ function karmaBodyParser (config) {
   return function(req, res, next) {
     if (req.method === 'GET') {
       req.query = url.parse(req.url, true).query;
+      console.log(req.query);
       next();
     } else {
       jsonParser(req, res, function(err) {

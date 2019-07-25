@@ -1,4 +1,4 @@
-function _extend(target: any, source: any) {
+function _extend(target: any, source: any): any {
   for (let key in source) {
     if (source[key] != null) {
       target[key] = source[key];
@@ -6,82 +6,75 @@ function _extend(target: any, source: any) {
   }
 }
 
-class R {
-
-  opts: any;
-
-  constructor(args: any[]) {
-    this.opts = { credentials: 'same-origin', method: 'GET' };
-    this._args(args);
-  }
-
-  method(verb: string) {
-    this.opts.method = verb.toUpperCase();
-    return this;
-  }
-
-  _args(args: any[]) {
-    if (typeof args[0] === 'string') {
-      this.opts.url = args.shift();
-    }
-    if (typeof args[0] === 'object') {
-      _extend(this.opts, args.shift());
-    }
-
-    this.opts.headers = this.opts.headers || {};
-
-    if (this.opts.json) {
-      this.opts.body = JSON.stringify(this.opts.json);
-      this.opts.headers['Content-Type'] = 'application/json';
-      delete this.opts.json;
-    }
-  }
-
-  text() {
-    return this._request('text');
-  }
-
-  json() {
-    return this._request('json');
-  }
-
-  blob() {
-    return this._request('blob');
-  }
-
-  arrayBuffer() {
-    return this._request('arrayBuffer');
-  }
-
-  formData() {
-    return this._request('formData');
-  }
-
-  _request(way: string) {
-    let url: string = this.opts.url;
-    delete this.opts.url;
-
-    return fetch(url, this.opts).then((res: any) => {
-      if (res.ok) {
-        return res[way]();
-      } else {
-        let error: any = new Error(res.statusText);
-        error.name = 'StatusError';
-        error.statusCode = res.status;
-        throw error;
+/*
+ * 整理参数
+ *    1. url: String, accept: String, opts: Object
+ *    2. opts: Object
+ */
+function _opts(args: any): any {
+  let opts: any = { credentials: 'same-origin', method: 'GET' };
+  if (typeof args[0] === 'string') { // 第一个参数传递的是 url
+    opts.url = args[0];
+    if (typeof args[1] === 'string') {
+      opts.accept = args[1];
+      if (typeof args[2] === 'object') {
+        _extend(opts, args[2]);
       }
-    });
+    } else {
+      _extend(opts, args[1] || {});
+    }
+  } else {
+    _extend(opts, args.shift());
   }
+  if (opts.json) {
+    opts.headers = opts.headers || {};
+    opts.body = JSON.stringify(opts.json);
+    opts.headers['Content-Type'] = 'application/json;charset=utf-8';
+    delete opts.json;
+  }
+  return opts;
 }
 
+/**
+ * 进行 fetch 请求，跟原生的 fetch 不同的是，该函数允许通过 opts.url 的方式定义请求路径
+ * @param opts
+ *    url: String  请求地址
+ *    accept: String  接收的返回数据格式， fetch 会将数据转换为对应的格式返回，如果没有传则根据 res.headers.Content-Type 来识别返回
+ * @private
+ */
+function _fetch(opts: any): any {
+  let url: any = opts.url;
+  delete opts.url;
+  let accept: string = opts.accept;
+  delete opts.accept;
+  return fetch(url, opts).then((res: any) => {
+    if (res.ok) {
+      accept = accept || res.headers.get('Content-Type') || 'text';
+      if (/json/.test(accept)) {
+        return res.json();
+      } else if (/form-data/.test(accept)) {
+        return res.formData();
+      } else {
+        return res.text();
+      }
+    } else {
+      let error: any = new Error(res.statusText);
+      error.name = 'StatusError';
+      error.statusCode = res.status;
+      throw error;
+    }
+  });
+}
 
-let phax: any = (...args: any[]) => new R(args);
+let phax: any = (...args: any[]) => _fetch(_opts(args));
 
-phax.get = (...args: any[]) => new R(args).method('GET');
-phax.post = (...args: any[]) => new R(args).method('POST');
-phax.put = (...args: any[]) => new R(args).method('PUT');
-phax.patch = (...args: any[]) => new R(args).method('PATCH');
-phax.delete = (...args: any[]) => new R(args).method('DELETE');
-phax.head = (...args: any[]) => new R(args).method('HEAD');
+phax.get = (...args: any[]) => _fetch(_opts(args));
+['POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'].forEach((m) => {
+  phax[m.toLowerCase()] = (...args: any[]) => {
+    let opts = _opts(args);
+    opts.method = m;
+    return _fetch(opts);
+  };
+});
 
 export default phax;

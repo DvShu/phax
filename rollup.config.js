@@ -7,7 +7,8 @@ export default {
   output: {
     file: './dist/index.js',
     format: 'umd',
-    name: "phax"
+    name: "phax",
+    exports: 'auto'
   },
   plugins: [
     typescript({
