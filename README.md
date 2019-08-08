@@ -122,15 +122,15 @@ phax.post('/post_user', { json: { name: 'LIVI' } })
     ```
     > NOTE: Follow-up may consider simple support for this approach.
 ## API
-1. `phax(url[, accept [, fetchOpts]])` 执行 get 请求
+1. `phax(url[, accept [, fetchOpts]])`
 2. `phax(fetchOpts)`
 3. `phax.get()`
 4. `phax.post()`  
 
 ……
 
-兼容的请求方法有：*get*、*post*、*put*、*delete*、*patch*，所有的请求方法的参数跟 `phax()` 的参数保持一致  
-参数介绍：
+supported methods：*get*、*post*、*put*、*delete*、*patch*，all methods params same as `phax()`
+param desc：
 * url: *String*
 * accept: *String* _[Optional]_ The return type；The priority over default automatic matching
 * json: *Object* _[Optional]_ POST JSON body
