@@ -5,51 +5,45 @@ function _extend(target, source) {
         }
     }
 }
-/*
- * 整理参数
- *    1. url: String, accept: String, opts: Object
- *    2. opts: Object
- */
-function _opts(args) {
-    let opts = { credentials: 'same-origin', method: 'GET' };
-    if (typeof args[0] === 'string') { // 第一个参数传递的是 url
-        opts.url = args[0];
-        if (typeof args[1] === 'string') {
-            opts.accept = args[1];
-            if (typeof args[2] === 'object') {
-                _extend(opts, args[2]);
+function _init(initParams) {
+    let params = { credentials: 'same-origin', method: 'GET' };
+    if (typeof initParams[0] === 'string') {
+        params.url = initParams[0];
+        if (typeof initParams[1] === 'string') {
+            params.accept = initParams[1];
+            if (typeof initParams[2] === 'object') {
+                _extend(params, initParams[2]);
             }
         }
         else {
-            _extend(opts, args[1] || {});
+            _extend(params, initParams[1] || {});
         }
     }
     else {
-        _extend(opts, args.shift());
+        _extend(params, initParams.shift());
     }
-    if (opts.json) {
-        opts.headers = opts.headers || {};
-        opts.body = JSON.stringify(opts.json);
-        opts.headers['Content-Type'] = 'application/json;charset=utf-8';
-        delete opts.json;
+    if (params.json) {
+        params.headers = params.headers || {};
+        params.body = JSON.stringify(params.json);
+        params.headers["Content-Type"] = 'application/json;charset=utf-8';
+        delete params.json;
     }
-    return opts;
+    return params;
 }
 /**
- * 进行 fetch 请求，跟原生的 fetch 不同的是，该函数允许通过 opts.url 的方式定义请求路径
- * @param opts
- *    url: String  请求地址
- *    accept: String  接收的返回数据格式， fetch 会将数据转换为对应的格式返回，如果没有传则根据 res.headers.Content-Type 来识别返回
- * @private
+ * @param url 请求地址
+ * @param accept 允许的返回值类型, 如果是 json，会对返回值做 JSON.parse 处理
  */
-function _fetch(opts) {
-    let url = opts.url;
-    delete opts.url;
-    let accept = opts.accept;
-    delete opts.accept;
-    return fetch(url, opts).then((res) => {
+function _fetch(params) {
+    let url = params.url;
+    let accept = params.accept;
+    delete params.url;
+    delete params.accept;
+    return fetch(url, params).then((res) => {
         if (res.ok) {
-            accept = accept || res.headers.get('Content-Type') || 'text';
+            // 请求成功
+            // 接收的返回值类型
+            accept = accept || res.headers.get("Content-Type") || "text";
             if (/json/.test(accept)) {
                 return res.json();
             }
@@ -61,20 +55,22 @@ function _fetch(opts) {
             }
         }
         else {
+            // 请求失败
             let error = new Error(res.statusText);
-            error.name = 'StatusError';
+            error.name = "FetchError";
             error.statusCode = res.status;
             throw error;
         }
     });
 }
-let phax = (...args) => _fetch(_opts(args));
-phax.get = (...args) => _fetch(_opts(args));
-['POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'].forEach((m) => {
-    phax[m.toLowerCase()] = (...args) => {
-        let opts = _opts(args);
-        opts.method = m;
-        return _fetch(opts);
+let phax = function (params) {
+    return _fetch(_init(arguments));
+};
+['get', 'post'].forEach(function (m) {
+    phax[m] = function (params) {
+        let p = _init(arguments);
+        p.method = m.toUpperCase();
+        return _fetch(p);
     };
 });
 export default phax;

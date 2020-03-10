@@ -1,9 +1,9 @@
 {
   "name": "phax",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Lightweight HTTP client based on the browser Fetch API",
   "main": "index.js",
-  "types": "index.d.ts",
+  "types": "lin/index.ts",
   "jsdelivr": "dist/index.js",
   "author": "Tenny",
   "license": "MIT",
