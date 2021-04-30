@@ -21,3 +21,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+.yarn
+yarn.lock
+.pnp.js
+.yarnrc.yml

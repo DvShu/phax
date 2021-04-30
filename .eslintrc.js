@@ -1,22 +1,20 @@
 module.exports = {
   root: true,
   env: {
-    browser: true,
-    node: true
+    mocha: true,
+    es6: true,
+    'shared-node-browser': true
   },
   'extends': [
-    'eslint-config-alloy/typescript'
+    'alloy',
+    'alloy/typescript'
   ],
-  globals: {},
+  globals: {
+    RequestCredentials: true
+  },
   rules: {
-    // @fixable 一个缩进必须用两个空格替代
-    'indent': [
-      'error',
-      2,
-      {
-        SwitchCase: 1,
-        flatTernaryExpressions: true
-      }
-    ]
+    "no-param-reassign": "off",
+    "no-eq-null": "off",
+    eqeqeq: ['error', 'always', { null: 'ignore' }],
   }
 }
