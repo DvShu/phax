@@ -1,10 +1,11 @@
 {
   "name": "phax",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Lightweight HTTP client based on the browser Fetch API",
   "main": "index.js",
   "types": "index.d.ts",
   "author": "Tenny",
+  "type": "module",
   "license": "MIT",
   "files": [
     "index.js",
@@ -17,11 +18,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:ReconcileMySelf/phax.git"
+    "url": "git@github.com:DvShu/phax.git"
   },
-  "homepage": "https://github.com/ReconcileMySelf/phax",
+  "homepage": "https://github.com/DvShu/phax",
   "bugs": {
-    "url": "https://github.com/ReconcileMySelf/phax/issues"
+    "url": "https://github.com/DvShu/phax/issues"
   },
   "scripts": {
     "test": "node test/server.js",
