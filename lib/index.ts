@@ -42,34 +42,60 @@ export async function r(config: RConfig) {
     method: config.method || "GET",
     headers,
     body,
-  }).then((res) => {
-    if (res.ok) {
-      let resType = config.responseType;
-      if (!resType) {
-        let accept =
-          res.headers.get("Content-Type") ||
-          res.headers.get("Accept") ||
-          "application/json";
-        accept = accept.toLowerCase();
-        if (accept.includes("application/json")) {
-          resType = "json";
-        } else {
-          resType = "json";
+  })
+    .then((res) => {
+      const resQuue: any[] = [
+        Promise.resolve({
+          ok: res.ok,
+          status: res.status,
+          statusText: res.statusText,
+        }),
+      ];
+      if (res.ok) {
+        let resType = config.responseType;
+        if (!resType) {
+          let accept =
+            res.headers.get("Content-Type") ||
+            res.headers.get("Accept") ||
+            "application/json";
+          accept = accept.toLowerCase();
+          if (accept.includes("application/json")) {
+            resType = "json";
+          } else {
+            resType = "json";
+          }
         }
+        switch (resType) {
+          case "text":
+            resQuue.push(res.text());
+            break;
+          case "blob":
+            resQuue.push(res.blob());
+            break;
+          case "arrayBuffer":
+            resQuue.push(res.arrayBuffer());
+            break;
+          case "formData":
+            resQuue.push(res.formData());
+            break;
+          default:
+            resQuue.push(res.json());
+            break;
+        }
+      } else {
+        resQuue.push(res.text());
       }
-      switch (resType) {
-        case "text":
-          return res.text();
-        case "blob":
-          return res.blob();
-        case "arrayBuffer":
-          return res.arrayBuffer();
-        case "formData":
-          return res.formData();
-        default:
-          return res.json();
+      return Promise.all(resQuue);
+    })
+    .then((res: any) => {
+      if (res[0].ok) {
+        return res[1];
       }
-    }
-    throw new Error(`${res.status} - ${res.statusText}`);
-  });
+      const e: any = new Error(`${res[0].status} - ${res[0].statusText}`);
+      e.name = "HTTPError";
+      e.status = res[0].status;
+      e.statusText = res[0].statusText;
+      e.data = res[1];
+      throw e;
+    });
 }
