@@ -1,6 +1,6 @@
 {
   "name": "phax",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Lightweight HTTP client based on the browser Fetch API",
   "main": "index.js",
   "types": "index.d.ts",
@@ -32,5 +32,8 @@
   "devDependencies": {
     "oxlint": "^1.24.0",
     "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "@asteres/signature": "^0.1.4"
   }
 }

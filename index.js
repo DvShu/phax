@@ -1,3 +1,40 @@
+import { generateSignatureHeader } from "@asteres/signature";
+/** 默认配置对象，包含 AppID、AppSecret 和基础 URL */
+let defaultConfig = {
+    /** 用于签名的 AppID */
+    appId: "",
+    /** 用于签名的 AppSecret */
+    appSecret: "",
+    /** 基础 URL，用于拼接请求路径 */
+    baseUrl: "",
+};
+/**
+ * 设置默认配置的函数
+ *
+ * @param config - 包含 AppID、AppSecret 和基础 URL 的配置对象
+ */
+export async function setConfig(config) {
+    Object.assign(defaultConfig, config);
+}
+/**
+ * 将查询参数对象或 URLSearchParams 转换为查询字符串
+ * @param query - 查询参数对象或 URLSearchParams 实例
+ * @returns 返回格式化后的查询字符串,以'?'开头,如果 query 为空则返回空字符串
+ */
+function queryStringify(query) {
+    if (query) {
+        let q;
+        if (!(query instanceof URLSearchParams)) {
+            q = new URLSearchParams(query);
+        }
+        else {
+            q = query;
+        }
+        const qstr = q.toString();
+        return `${qstr ? "?" : ""}${qstr}`;
+    }
+    return "";
+}
 /**
  * 发送 HTTP 请求的工具函数
  *
@@ -6,24 +43,42 @@
  * @throws 当响应状态不为 ok 时抛出错误
  */
 export async function r(config) {
+    const method = config.method || "GET";
     const headers = new Headers({ ...config.headers });
-    let body = undefined;
+    let body = config.body;
     // 处理 JSON 数据
-    if (config.json) {
+    if (!body && config.json) {
         if (!headers.has("Content-Type")) {
             headers.set("Content-Type", "application/json;charset=UTF-8");
         }
         body = JSON.stringify(config.json);
     }
-    // 处理请求体
-    if (config.body) {
-        body = config.body;
+    // 签名
+    const appid = config.appId || defaultConfig.appId;
+    const appSecret = config.appSecret || defaultConfig.appSecret;
+    let url = config.url;
+    if (appid && appSecret) {
+        const signInfo = await generateSignatureHeader({
+            appid: appid,
+            secretKey: appSecret,
+            method: method,
+            url: config.url,
+            body,
+            query: config.query,
+        });
+        url = signInfo.url;
+        delete config.query;
+        headers.set("X-Signature", signInfo["headerValue"]);
     }
+    if (config.query) {
+        url += queryStringify(config.query);
+    }
+    url = `${defaultConfig.baseUrl}${url}`;
     // 发送请求并处理响应
-    return fetch(config.url, {
-        method: config.method || "GET",
+    return fetch(url, {
+        method,
         headers,
-        body,
+        body, // oxlint-disable-line
     })
         .then((res) => {
         const resQuue = [
