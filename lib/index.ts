@@ -67,8 +67,7 @@ function queryStringify(query: string | Record<string, any> | object) {
 export async function r(config: RConfig) {
   const method = config.method || "GET";
   const headers = new Headers({ ...config.headers });
-  let body: null | string | FormData | URLSearchParams | undefined =
-    config.body;
+  let body: null | string | FormData | URLSearchParams | undefined = config.body;
 
   // 处理 JSON 数据
   if (!body && config.json) {
@@ -112,20 +111,19 @@ export async function r(config: RConfig) {
           ok: res.ok,
           status: res.status,
           statusText: res.statusText,
+          headers: res.headers,
         }),
       ];
       if (res.ok) {
         let resType = config.responseType;
         if (!resType) {
           let accept =
-            res.headers.get("Content-Type") ||
-            res.headers.get("Accept") ||
-            "application/json";
+            res.headers.get("Content-Type") || res.headers.get("Accept") || "application/json";
           accept = accept.toLowerCase();
           if (accept.includes("application/json")) {
             resType = "json";
           } else {
-            resType = "json";
+            resType = "text";
           }
         }
         switch (resType) {
@@ -155,7 +153,7 @@ export async function r(config: RConfig) {
         return res[1];
       }
       const e: any = new Error(`${res[0].status} - ${res[0].statusText}`);
-      e.name = "HTTPError";
+      e.name = "HTTPRequestError";
       e.status = res[0].status;
       e.statusText = res[0].statusText;
       e.data = res[1];

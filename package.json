@@ -26,14 +26,15 @@
   },
   "scripts": {
     "test": "node test/server.js",
-    "lint": "eslint --ext .js lib/index.ts",
     "build": "tsc"
   },
   "devDependencies": {
-    "oxlint": "^1.24.0",
-    "typescript": "^4.2.4"
+    "@types/node": "^25.0.3",
+    "oxfmt": "^0.18.0",
+    "oxlint": "^1.33.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@asteres/signature": "^0.1.4"
+    "@asteres/signature": "^0.1.5"
   }
 }
