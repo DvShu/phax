@@ -86,20 +86,19 @@ export async function r(config) {
                 ok: res.ok,
                 status: res.status,
                 statusText: res.statusText,
+                headers: res.headers,
             }),
         ];
         if (res.ok) {
             let resType = config.responseType;
             if (!resType) {
-                let accept = res.headers.get("Content-Type") ||
-                    res.headers.get("Accept") ||
-                    "application/json";
+                let accept = res.headers.get("Content-Type") || res.headers.get("Accept") || "application/json";
                 accept = accept.toLowerCase();
                 if (accept.includes("application/json")) {
                     resType = "json";
                 }
                 else {
-                    resType = "json";
+                    resType = "text";
                 }
             }
             switch (resType) {
@@ -127,10 +126,10 @@ export async function r(config) {
     })
         .then((res) => {
         if (res[0].ok) {
-            return res[1];
+            return { data: res[1], headers: res[0].headers };
         }
         const e = new Error(`${res[0].status} - ${res[0].statusText}`);
-        e.name = "HTTPError";
+        e.name = "HTTPRequestError";
         e.status = res[0].status;
         e.statusText = res[0].statusText;
         e.data = res[1];

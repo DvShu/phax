@@ -37,5 +37,8 @@ export declare function setConfig(config: typeof defaultConfig): Promise<void>;
  * @returns 返回一个解析为 JSON 的 Promise
  * @throws 当响应状态不为 ok 时抛出错误
  */
-export declare function r(config: RConfig): Promise<any>;
+export declare function r<T>(config: RConfig): Promise<{
+    data: T;
+    headers: Headers;
+}>;
 export {};

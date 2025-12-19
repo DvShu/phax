@@ -64,7 +64,7 @@ function queryStringify(query: string | Record<string, any> | object) {
  * @returns 返回一个解析为 JSON 的 Promise
  * @throws 当响应状态不为 ok 时抛出错误
  */
-export async function r(config: RConfig) {
+export async function r<T>(config: RConfig) {
   const method = config.method || "GET";
   const headers = new Headers({ ...config.headers });
   let body: null | string | FormData | URLSearchParams | undefined = config.body;
@@ -150,7 +150,7 @@ export async function r(config: RConfig) {
     })
     .then((res: any) => {
       if (res[0].ok) {
-        return res[1];
+        return { data: res[1], headers: res[0].headers } as { data: T; headers: Headers };
       }
       const e: any = new Error(`${res[0].status} - ${res[0].statusText}`);
       e.name = "HTTPRequestError";

@@ -6,7 +6,7 @@ function send(res, contentType, err, data) {
     console.error(err);
     res.writeHead(404, { "Content-Type": "text/plain" });
   } else {
-    res.writeHead(200, { "Content-Type": contentType });
+    res.writeHead(200, { "Content-Type": contentType, "X-Token": "Barer xxx500xxx" });
     res.write(data);
   }
   res.end();

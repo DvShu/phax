@@ -11,6 +11,7 @@ interface PhaxResonse {
   /** 请求的函数 */
   method: string;
   body?: any;
+  type?: string;
 }
 
 interface PhaxBodyResponse extends PhaxResonse {
@@ -20,41 +21,36 @@ interface PhaxBodyResponse extends PhaxResonse {
   };
 }
 
-interface PhaxPostResponse extends PhaxBodyResponse {
-  /** 请求的类型，可选值有: qs、json */
-  type: string;
-}
-
 describe("phax", function () {
   describe("#get", function () {
     it("base", async () => {
-      const res = await r({ url: `${baseUrl}/test?id=1` });
-      assert.strictEqual(res.method, "GET");
-      assert.equal(res.body.id, 1);
-      assert.strictEqual(res.pathname, "/test");
+      const res = await r<PhaxResonse>({ url: `${baseUrl}/test?id=1` });
+      assert.strictEqual(res.data.method, "GET");
+      assert.equal(res.data.body.id, 1);
+      assert.strictEqual(res.data.pathname, "/test");
     });
 
     it("response_string", async () => {
       const res = await r({ url: `${baseUrl}/system_monitor` });
-      assert.strictEqual(res, "SUCCESS");
+      assert.strictEqual(res.data, "SUCCESS");
     });
   });
 
   describe("#post", function () {
     it("querystring", async () => {
-      const res = await r({ url: `${baseUrl}/post`, body: "id=1", method: "POST" });
-      assert.strictEqual(res.method, "POST");
-      assert.strictEqual(res.type, "qs");
-      assert.equal(res.body.id, 1);
-      assert.strictEqual(res.pathname, "/post");
+      const res = await r<PhaxResonse>({ url: `${baseUrl}/post`, body: "id=1", method: "POST" });
+      assert.strictEqual(res.data.method, "POST");
+      assert.strictEqual(res.data.type, "qs");
+      assert.equal(res.data.body.id, 1);
+      assert.strictEqual(res.data.pathname, "/post");
     });
 
     it("json", async () => {
-      const res = await r({ url: `${baseUrl}/post`, json: { id: 1 }, method: "POST" });
-      assert.strictEqual(res.method, "POST");
-      assert.strictEqual(res.type, "json");
-      assert.strictEqual(res.body.id, 1);
-      assert.strictEqual(res.pathname, "/post");
+      const res = await r<PhaxResonse>({ url: `${baseUrl}/post`, json: { id: 1 }, method: "POST" });
+      assert.strictEqual(res.data.method, "POST");
+      assert.strictEqual(res.data.type, "json");
+      assert.strictEqual(res.data.body.id, 1);
+      assert.strictEqual(res.data.pathname, "/post");
     });
   });
 });
