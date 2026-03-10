@@ -29,7 +29,7 @@ export type RConfig = RequestConfig & Partial<typeof defaultConfig>;
  *
  * @param config - 包含 AppID、AppSecret 和基础 URL 的配置对象
  */
-export declare function setConfig(config: typeof defaultConfig): Promise<void>;
+export declare function setConfig(config: Partial<typeof defaultConfig>): Promise<void>;
 /**
  * 发送 HTTP 请求的工具函数
  *
