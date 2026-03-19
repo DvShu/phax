@@ -13,7 +13,7 @@ let defaultConfig = {
  *
  * @param config - 包含 AppID、AppSecret 和基础 URL 的配置对象
  */
-export async function setConfig(config) {
+export function setConfig(config) {
     Object.assign(defaultConfig, config);
 }
 /**

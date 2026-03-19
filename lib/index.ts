@@ -34,7 +34,7 @@ export type RConfig = RequestConfig & Partial<typeof defaultConfig>;
  *
  * @param config - 包含 AppID、AppSecret 和基础 URL 的配置对象
  */
-export async function setConfig(config: Partial<typeof defaultConfig>) {
+export function setConfig(config: Partial<typeof defaultConfig>) {
   Object.assign(defaultConfig, config);
 }
 
