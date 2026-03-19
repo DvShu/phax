@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:DvShu/phax.git"
+    "url": "git+ssh://git@github.com/DvShu/phax.git"
   },
   "homepage": "https://github.com/DvShu/phax",
   "bugs": {
