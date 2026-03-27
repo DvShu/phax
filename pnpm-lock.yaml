@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@asteres/signature':
-        specifier: ^0.1.5
-        version: 0.1.5(ph-utils@0.16.4)
+        specifier: ^0.2.1
+        version: 0.2.1(ph-utils@0.16.4)
     devDependencies:
       '@types/node':
         specifier: ^25.5.0
@@ -27,8 +27,8 @@ importers:
 
 packages:
 
-  '@asteres/signature@0.1.5':
-    resolution: {integrity: sha512-zVVJtXSJS7wkNeO2kaoF1GJ0Om8/Yn8r6j7LqmDZdmUr36I3zQMPdiQAhlT9yDzSVMldCLXFo7WtrP4ljTi4dQ==}
+  '@asteres/signature@0.2.1':
+    resolution: {integrity: sha512-iGgn481hQbZxCAH2uKAneFcCsoHXHEho/5so8TGkvazkcyibjzS8fXFXkzH8X+DrQOpv4qjuZkSY4o2aauBgFg==}
     peerDependencies:
       ph-utils: '>=0.15.0'
 
@@ -311,7 +311,7 @@ packages:
 
 snapshots:
 
-  '@asteres/signature@0.1.5(ph-utils@0.16.4)':
+  '@asteres/signature@0.2.1(ph-utils@0.16.4)':
     dependencies:
       ph-utils: 0.16.4
 
