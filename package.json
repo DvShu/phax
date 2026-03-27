@@ -29,10 +29,10 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
-    "oxfmt": "^0.18.0",
-    "oxlint": "^1.33.0",
-    "typescript": "^5.9.3"
+    "@types/node": "^25.5.0",
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
+    "typescript": "^6.0.2"
   },
   "dependencies": {
     "@asteres/signature": "^0.1.5"
